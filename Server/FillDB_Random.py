@@ -21,19 +21,25 @@ instructors = ['instructorA','instructorB','instructorC','instructorD','instruct
 
 for course in course_num:
      c.execute('''INSERT INTO courseIns (course_num,instructor_name) VALUES (?,?)'''
-     ,(random.choice(course_num),random.choice(instructors)))
+     ,(course,random.choice(instructors)))
 
 for day in days:
     for slot in slots:
         for hall in halls:
             if(random.randint(0,10)==7):
-                continue
-            c.execute('''INSERT INTO schedule VALUES (?,?,?,?)''',
-            (day,
-            slot,
-            hall,
-            random.randint(1,29))
-            )
+                c.execute('''INSERT INTO schedule VALUES (?,?,?,?)''',
+                (day,
+                slot,
+                hall,
+                0)
+                )
+            else:    
+                c.execute('''INSERT INTO schedule VALUES (?,?,?,?)''',
+                (day,
+                slot,
+                hall,
+                random.randint(1,29))
+                )
 
 connection.commit()
 connection.close()
