@@ -18,27 +18,33 @@ course_num = ['CSE115','CSE125','CSE116','CSE126','CSE127','CSE128','CSE221','CS
 instructors = ['instructorA','instructorB','instructorC','instructorD','instructorE','instructorF','instructorG','instructorH','instructorI',]
 
 
-
 for course in course_num:
-     c.execute('''INSERT INTO courseIns (course_num,instructor_name) VALUES (?,?)'''
+    c.execute('''INSERT INTO courseIns (course_num,instructor_name) VALUES (?,?)'''
+     ,(course,random.choice(instructors)))
+    c.execute('''INSERT INTO courseIns (course_num,instructor_name) VALUES (?,?)'''
      ,(course,random.choice(instructors)))
 
 for day in days:
     for slot in slots:
+        numlist = []
         for hall in halls:
-            if(random.randint(0,10)==7):
+            if(random.randint(5,10)==7):
                 c.execute('''INSERT INTO schedule VALUES (?,?,?,?)''',
                 (day,
                 slot,
                 hall,
                 0)
                 )
-            else:    
+            else:
+                rnd = None
+                while(rnd in numlist):
+                    rnd = random.randint(1,56)
+                numlist.append(rnd)
                 c.execute('''INSERT INTO schedule VALUES (?,?,?,?)''',
                 (day,
                 slot,
                 hall,
-                random.randint(1,29))
+                rnd)
                 )
 
 connection.commit()
