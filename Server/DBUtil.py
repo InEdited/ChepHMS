@@ -20,3 +20,13 @@ def getCourseTimes(courseNum):
                         )WHERE course_num=?
                     ''',(str(courseNum),))
     return cursor.fetchall()
+
+def insertCourse(day,slot,hall,courseNum,instructor_name):
+    cursor = initializeDB()
+    cursor.execute('''UPDATE schedule 
+                        SET course_ins = (
+                            SELECT course_ins from courseIns where course_num = ? AND instructor_name = ?
+                        ) 
+                        WHERE day = ? AND slot_num = ? AND hall_num = ?''',(courseNum,instructor_name,day,slot,hall))
+    cursor.fetchall()
+

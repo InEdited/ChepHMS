@@ -36,7 +36,7 @@ for day in days:
                 0)
                 )
             else:
-                rnd = None
+                rnd = random.randint(1,56)
                 while(rnd in numlist):
                     rnd = random.randint(1,56)
                 numlist.append(rnd)
