@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/ChepHMS.iml" filepath="$PROJECT_DIR$/ChepHMS.iml" />
-      <module fileurl="file://$PROJECT_DIR$/HallManagementSystem.iml" filepath="$PROJECT_DIR$/HallManagementSystem.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
