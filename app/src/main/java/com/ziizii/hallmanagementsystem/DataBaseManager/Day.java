@@ -23,6 +23,9 @@ public class Day
         this.dayName = dayName;
     }
 
+    public String getDayName() { return this.dayName; }
+
+
     public void setHalls(Hall[] halls)
     {
         this.halls = halls;
