@@ -34,7 +34,7 @@ def getCourse():
 
 @app.route('/reserveSlot', methods=['POST'])
 def reserveSlot():
-    print(request.get_json())
+    #print(request.get_json())
     if not request.get_json():
         return "{\"error\": \"Not found\"}" 
     day = request.get_json()['day']
@@ -46,5 +46,16 @@ def reserveSlot():
     print("Reserved hall " + hall + " on " + day + " for " + instructor_name )
     return json.dumps(db.insertCourse(day,slot,hall,course_num,instructor_name)),201
 
+
+@app.route('/login',methods=['POST'])
+def loginGate():
+    if not request.get_json():
+        return "{\"error\": \"Not found\"}" 
+    username = request.get_json()['username']
+    password = request.get_json()['password']
+    id_type = db.getLogin(username,password)
+    return json.dumps(id_type)
+
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host= '0.0.0.0',port=5000)

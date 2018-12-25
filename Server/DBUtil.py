@@ -30,3 +30,17 @@ def insertCourse(day,slot,hall,courseNum,instructor_name):
                         WHERE day = ? AND slot_num = ? AND hall_num = ?''',(courseNum,instructor_name,day,slot,hall))
     cursor.fetchall()
 
+def getLogin(username,enteredPassword):
+    cursor = initializeDB()
+    cursor.execute('''SELECT password FROM login 
+                            WHERE username =? 
+                            ''',(str(username),))
+    hashedPasssword = cursor.fetchone()[0]
+    print(hashedPasssword)
+    if(enteredPassword!=hashedPasssword):
+        return "fail"
+    cursor.execute('''SELECT id_type FROM login
+                            WHERE username=?
+                            ''',(str(username),))
+    return cursor.fetchall()
+

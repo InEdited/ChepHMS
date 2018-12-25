@@ -9,6 +9,8 @@ cursor = connection.cursor()
 cursor.execute("DROP TABLE IF EXISTS schedule")
 cursor.execute("DROP TABLE IF EXISTS courseIns")
 cursor.execute("DROP TABLE IF EXISTS course_name")
+cursor.execute("DROP TABLE IF EXISTS login")
+
 cursor.execute('''CREATE TABLE schedule (
     day        VARCHAR 
                 NOT NULL,
@@ -38,6 +40,14 @@ cursor.execute('''CREATE TABLE course_name (
                         UNIQUE
                         NOT NULL,
     course_name VARCHAR
+    )''')
+
+cursor.execute('''CREATE TABLE login(
+    username VARCHAR PRIMARY KEY
+                        UNIQUE
+                        NOT NULL,
+    password  VARCHAR NOT NULL,
+    id_type VARCHAR    
     )''')
 
 connection.commit()

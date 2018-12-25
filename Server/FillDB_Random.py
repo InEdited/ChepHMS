@@ -1,4 +1,4 @@
-import sqlite3,os,random
+import sqlite3,os,random,hashlib
 
 #Get the directory of the current file and connect to the database in it
 dirPath = os.path.abspath(os.path.dirname(__file__))
@@ -6,6 +6,9 @@ dbPath = os.path.join(dirPath, 'Database/halls.db')
 connection = sqlite3.connect(dbPath)
 
 c = connection.cursor()
+def hashDis(thing):
+    thing = str(thing)
+    return hashlib.sha256((thing.encode())).hexdigest()
 
 days = ['Saturday','Sunday','Monday','Tuesday','Wednesday','Thursday']
 slots = [1,2,3,4,5,6,7,8,9,10,11,12]
@@ -17,6 +20,7 @@ halls = ['901','901A','902','902A','902B',
 course_num = ['CSE115','CSE125','CSE116','CSE126','CSE127','CSE128','CSE221','CSE222','CSE223','CSE275','CSE227','CSE224','CSE225','CSE226','CSE215','CSE365','CSE335','CSE325','CSE316','CSE336','CSE326','CSE345','CSE415','CSE436','CSE425','CSE437','CSE426','CSE427']
 instructors = ['instructorA','instructorB','instructorC','instructorD','instructorE','instructorF','instructorG','instructorH','instructorI',]
 
+username_passwords = {("InEdited","instructor") : hashDis('123456789'),("mo7sen","student"):hashDis('987654321') }
 
 for course in course_num:
     c.execute('''INSERT INTO courseIns (course_num,instructor_name) VALUES (?,?)'''
@@ -46,6 +50,9 @@ for day in days:
                 hall,
                 rnd)
                 )
+
+for user, password in username_passwords.items():
+    c.execute('''INSERT INTO login VALUES (?,?,?) ''',(str(user[0]),str(password),str(user[1])))
 
 connection.commit()
 connection.close()
