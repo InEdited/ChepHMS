@@ -80,3 +80,17 @@ def getTaughtCourses(username):
                        WHERE username = ? )''',(username,))
     return cursor.fetchall()
 
+
+def getCourseStudents(courseNum):
+    cursor = initializeDB()
+    cursor.execute('''SELECT name                    AS student_name,
+                             student_id,
+                             grade
+                        FROM (student_course    AS sc 
+                                INNER JOIN student_data AS s 
+                                ON sc.student_id = s.id) 
+                       WHERE course_num=?''',(courseNum,) )
+
+    dataz =  cursor.fetchall()
+    items = [dict(zip([key[0] for key in cursor.description],row)) for row in dataz]
+    return items 
