@@ -15,20 +15,33 @@ def getEmptyHalls(day,slot):
 
 def getCourseTimes(courseNum):
     cursor = initializeDB()
-    cursor.execute('''SELECT day , slot_num , hall_num , instructor_name
-                    FROM( schedule AS s INNER JOIN courseIns AS c ON s.course_ins = c.course_ins
-                        )WHERE course_num=?
+    cursor.execute('''SELECT day , slot_num , hall_num , id.name AS instructor_name
+                    FROM( 
+                        (schedule AS s 
+                            INNER JOIN courseIns AS c 
+                            ON s.course_ins = c.course_ins) 
+                                INNER JOIN instructor_data AS id 
+                                ON c.instructor_id = id.id )
+                            WHERE course_num=?
                     ''',(str(courseNum),))
     timez = cursor.fetchall()
-    items = [dict(zip([key[0] for key in cursor.description],row)) for row in timez]
-    return items
+    #items = [dict(zip([key[0] for key in cursor.description],row)) for row in timez]
+    return timez
 
 def insertCourse(day,slot,hall,courseNum,instructor_name):
     cursor = initializeDB()
-    cursor.execute('''INSERT INTO courseIns (course_num,instructor_name) VALUES (?,?);''',(courseNum,instructor_name,))
-    cursor.execute('''UPDATE schedule 
-                        SET course_ins = (SELECT course_ins from courseIns where course_num = ? AND instructor_name = ?) 
-                        WHERE day = ? AND slot_num = ? AND hall_num = ? ''',(courseNum,instructor_name,day,slot,str(hall),))
+    cursor.execute('''INSERT 
+                        INTO courseIns (course_num,instructor_name) 
+                      VALUES (?,?);''',(courseNum,instructor_name,))
+    cursor.execute('''
+                      UPDATE schedule 
+                         SET course_ins = (SELECT course_ins 
+                        FROM courseIns 
+                       WHERE course_num = ? 
+                         AND instructor_name = ?) 
+                       WHERE day = ? 
+                         AND slot_num = ? 
+                         AND hall_num = ? ''',(courseNum,instructor_name,day,slot,str(hall),))
     cursor.connection.commit()
 
 def getLogin(username,enteredPassword):
@@ -46,12 +59,24 @@ def getLogin(username,enteredPassword):
 
 def getCourseStuff(courseNum):
     cursor = initializeDB()
-    cursor.execute('''SELECT course_name,course_description,instructor_name 
-                        FROM(course_data as c INNER JOIN courseIns as ci on c.course_num = ci.course_num)
-                            WHERE c.course_num = ?''',(str(courseNum),))
+    cursor.execute('''SELECT course_namecourse_description,instructor_name AS courseName,courseDescription,instructorName
+                             FROM(course_data                              AS c 
+                  INNER JOIN courseIns                          AS ci 
+                          ON c.course_num = ci.course_num) 
+                       WHERE c.course_num = ?''',(str(courseNum),))
     dataz = cursor.fetchall()
     items = [{cursor.description[0][0] : dataz[0][0] 
             ,cursor.description[1][0] : dataz[0][1]
             ,cursor.description[2][0] : [row[2] for row in dataz]}]
     
     return items
+
+def getTaughtCourses(username):
+    cursor = initializeDB()
+    cursor.execute('''SELECT course_num AS courseNum
+                        FROM courseIns 
+                       WHERE instructor_id = (SELECT id 
+                        FROM login 
+                       WHERE username = ? )''',(username,))
+    return cursor.fetchall()
+

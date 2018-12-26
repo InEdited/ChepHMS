@@ -55,17 +55,18 @@ courses_dict = {
     "CSE496" : "Graduation Project (1)", 
     "CSE497" : "Graduation Project (2)" 
 }
-instructors = ['instructorA','instructorB','instructorC','instructorD','instructorE','instructorF','instructorG','instructorH','instructorI',]
+instructors = {1:'instructorA',2:'instructorB',3:'instructorC',4:'instructorD',5:'instructorE',6:'instructorF',7:'instructorG',8:'instructorH',9:'instructorI'}
 
-username_passwords = {("InEdited","instructor") : hashDis('123456789'),("mo7sen","student"):hashDis('987654321') }
+username_passwords = {("InEdited","instructor","16p6071") : hashDis('123456789'),("mo7sen","student","16p8888"):hashDis('987654321'), ("lolidk","instructor","4"):hashDis('aylmao') }
 
 for course,name in courses_dict.items():
     ra = random.randint(2,8)
-    c.execute('''INSERT INTO courseIns (course_num,instructor_name) VALUES (?,?)'''
-     ,(course,instructors[ra]))
-    c.execute('''INSERT INTO courseIns (course_num,instructor_name) VALUES (?,?)'''
-     ,(course,instructors[ra-1]))
+    c.execute('''INSERT INTO courseIns (course_num,instructor_id) VALUES (?,?)'''
+     ,(course,ra))
+    c.execute('''INSERT INTO courseIns (course_num,instructor_id) VALUES (?,?)'''
+     ,(course,ra-1))
     c.execute('''INSERT INTO course_data VALUES (?,?,?)''',(course,name,lorem.paragraph()))
+    
 
 for day in days:
     for slot in slots:
@@ -91,7 +92,16 @@ for day in days:
                 )
 
 for user, password in username_passwords.items():
-    c.execute('''INSERT INTO login VALUES (?,?,?) ''',(str(user[0]),str(password),str(user[1])))
+    c.execute('''INSERT 
+                   INTO login 
+                 VALUES (?,?,?,?) ''',(str(user[0]),str(password),str(user[2]),str(user[1])))
+
+for id,name in instructors.items():
+     c.execute('''INSERT 
+                    INTO instructor_data 
+                  VALUES (?,?) ''',(str(id),str(name)))
+     
+
 
 connection.commit()
 connection.close()

@@ -8,6 +8,16 @@ if [ "python -c \"\
 then 
 pip3 install flask
 fi
+
+if [ "python -c \"\
+>> try:
+>>     import lorem
+>>     print(1)
+>> except ImportError:
+>>     print(0)\"" = 0 ]
+then 
+pip3 install lorem
+fi
 python CreateDB.py 
 echo "Created DB"
 python FillDB_Random.py

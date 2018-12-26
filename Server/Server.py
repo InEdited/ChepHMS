@@ -65,5 +65,13 @@ def getCourseData():
     print()
     return json.dumps(stuff),201
 
+
+@app.route('/getTaughtCourses',methods=['POST'])
+def getTaughtCourses():
+    if not request.get_json():
+        return "{\"error\": \"Not found\"}" 
+    username = request.get_json()['username']
+    return json.dumps(db.getTaughtCourses(username))
+
 if __name__ == '__main__':
     app.run(host= '0.0.0.0',port=5000)
