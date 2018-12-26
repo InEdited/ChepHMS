@@ -8,8 +8,9 @@ connection = sqlite3.connect(dbPath)
 cursor = connection.cursor()
 cursor.execute("DROP TABLE IF EXISTS schedule")
 cursor.execute("DROP TABLE IF EXISTS courseIns")
-cursor.execute("DROP TABLE IF EXISTS course_name")
+cursor.execute("DROP TABLE IF EXISTS course_data")
 cursor.execute("DROP TABLE IF EXISTS login")
+cursor.execute("DROP TABLE IF EXISTS student_data")
 
 cursor.execute('''CREATE TABLE schedule (
     day        VARCHAR 
@@ -35,11 +36,12 @@ cursor.execute('''CREATE TABLE courseIns (
 
     )''')
 
-cursor.execute('''CREATE TABLE course_name (
+cursor.execute('''CREATE TABLE course_data (
     course_num  VARCHAR PRIMARY KEY
                         UNIQUE
                         NOT NULL,
-    course_name VARCHAR
+    course_name VARCHAR,
+    course_description BLOB
     )''')
 
 cursor.execute('''CREATE TABLE login(
@@ -48,6 +50,14 @@ cursor.execute('''CREATE TABLE login(
                         NOT NULL,
     password  VARCHAR NOT NULL,
     id_type VARCHAR    
+    )''')
+
+cursor.execute('''CREATE TABLE student_data(
+    id VARCHAR PRIMARY KEY
+                UNIQUE
+                NOT NULL,
+    name VARCHAR NOT NULL,
+    national_number UNSIGNED BIG INT NOT NULL
     )''')
 
 connection.commit()

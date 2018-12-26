@@ -24,7 +24,7 @@ def getHall():
 
 
 @app.route('/getCourseTime', methods=['POST'])
-def getCourse():
+def getCourseTime():
     print(request.get_json())
     if not request.get_json():
         return "{\"error\": \"Not found\"}" 
@@ -54,8 +54,14 @@ def loginGate():
     username = request.get_json()['username']
     password = request.get_json()['password']
     id_type = db.getLogin(username,password)
-    return json.dumps(id_type)
+    return json.dumps(id_type),201
 
+@app.route('/getCourseData',methods=['POST'])
+def getCourseData():
+    if not request.get_json():
+        return "{\"error\": \"Not found\"}" 
+    course_num = request.get_json()['course_num']
+    return json.dumps(db.getCourseStuff(course_num)[0]),201
 
 if __name__ == '__main__':
     app.run(host= '0.0.0.0',port=5000)

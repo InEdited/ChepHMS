@@ -36,7 +36,6 @@ def getLogin(username,enteredPassword):
                             WHERE username =? 
                             ''',(str(username),))
     hashedPasssword = cursor.fetchone()[0]
-    print(hashedPasssword)
     if(enteredPassword!=hashedPasssword):
         return "fail"
     cursor.execute('''SELECT id_type FROM login
@@ -44,3 +43,9 @@ def getLogin(username,enteredPassword):
                             ''',(str(username),))
     return cursor.fetchall()
 
+def getCourseStuff(courseNum):
+    cursor = initializeDB()
+    cursor.execute('''SELECT course_name,course_description,instructor_name 
+                        FROM(course_data as c INNER JOIN courseIns as ci on c.course_num = ci.course_num)
+                            WHERE c.course_num = ?''',(str(courseNum),))
+    return cursor.fetchall()
