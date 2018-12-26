@@ -81,5 +81,27 @@ def getCourseStudents():
     courseNum = request.get_json()['course_num']
     return json.dumps(db.getCourseStudents(courseNum))
 
+
+@app.route('/getCoursesRegistered',methods=['POST'])
+def getCoursesRegistered():
+    if not request.get_json():
+        return "{\"error\": \"Not found\"}" 
+    username = request.get_json()['username']
+    return json.dumps(db.getCoursesRegistered(username))
+
+
+@app.route('/getGpa',methods=['POST'])
+def getGPA():
+    if not request.get_json():
+        return "{\"error\": \"Not found\"}" 
+    username = request.get_json()['username']
+    hopa = db.getCoursesRegistered(username)
+    
+    sum=0
+    for lol in hopa:
+        sum+=(abs(ord(lol[3])-69)*3)
+        print(sum)
+    return json.dumps(sum/(3*len(hopa)))
+
 if __name__ == '__main__':
-    app.run(host= '0.0.0.0',port=5000)
+    app.run(debug=True,host= '0.0.0.0',port=5000)

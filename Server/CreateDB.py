@@ -70,7 +70,7 @@ cursor.execute('''CREATE TABLE student_data(
     )''')
 
 cursor.execute('''CREATE TABLE student_course(
-    course_num VARCHAR NOT NULL,
+    course_num VARCHAR NOT NULL REFERENCES course_data(course_num),
     student_id VARCHAR 
                 REFERENCES student_data(id) ON DELETE CASCADE
                                             ON UPDATE CASCADE,

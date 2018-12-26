@@ -57,7 +57,7 @@ courses_dict = {
 }
 instructors = {1:'instructorA',2:'instructorB',3:'instructorC',4:'instructorD',5:'instructorE',6:'instructorF',7:'instructorG',8:'instructorH',9:'instructorI'}
 
-username_passwords = {("InEdited","instructor","16p6071") : hashDis('123456789'),("mo7sen","student","16p8888"):hashDis('987654321'), ("lolidk","instructor","4"):hashDis('aylmao') }
+username_passwords = {("InEdited","instructor","16p6071") : hashDis('123456789'),("mo7sen","student","16p8207"):hashDis('987654321'), ("lolidk","instructor","4"):hashDis('aylmao') }
 
 for course,name in courses_dict.items():
     ra = random.randint(2,8)
@@ -101,6 +101,15 @@ for id,name in instructors.items():
                     INTO instructor_data 
                   VALUES (?,?) ''',(str(id),str(name)))
      
+
+#randomly manually populating student data and student course
+c.execute('''INSERT INTO student_data values (?,?,?)''',("16p8207","Ruby",5555555555))
+
+c.execute('''INSERT INTO student_course values (?,?,?,?,?)''',("CSE115","16p8207",2018,"fall","A"))
+c.execute('''INSERT INTO student_course values (?,?,?,?,?)''',("CSE116","16p8207",2018,"fall","B"))
+c.execute('''INSERT INTO student_course values (?,?,?,?,?)''',("CSE227","16p8207",2018,"fall","C"))
+c.execute('''INSERT INTO student_course values (?,?,?,?,?)''',("CSE222","16p8207",2018,"fall","B"))
+c.execute('''INSERT INTO student_course values (?,?,?,?,?)''',("CSE223","16p8207",2018,"fall","D"))
 
 
 connection.commit()

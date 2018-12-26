@@ -59,10 +59,13 @@ def getLogin(username,enteredPassword):
 
 def getCourseStuff(courseNum):
     cursor = initializeDB()
-    cursor.execute('''SELECT course_namecourse_description,instructor_name AS courseName,courseDescription,instructorName
-                             FROM(course_data                              AS c 
-                  INNER JOIN courseIns                          AS ci 
-                          ON c.course_num = ci.course_num) 
+    cursor.execute('''SELECT course_name, course_description,  id.name as instructor_name
+                             FROM(
+                                 (course_data AS c 
+                                    INNER JOIN courseIns AS ci 
+                                         ON c.course_num = ci.course_num)
+                                    INNER JOIN instructor_data AS id 
+                                        ON ci.instructor_id = id.id) 
                        WHERE c.course_num = ?''',(str(courseNum),))
     dataz = cursor.fetchall()
     items = [{cursor.description[0][0] : dataz[0][0] 
@@ -90,7 +93,15 @@ def getCourseStudents(courseNum):
                                 INNER JOIN student_data AS s 
                                 ON sc.student_id = s.id) 
                        WHERE course_num=?''',(courseNum,) )
-
     dataz =  cursor.fetchall()
     items = [dict(zip([key[0] for key in cursor.description],row)) for row in dataz]
     return items 
+
+def getCoursesRegistered(username):
+    cursor = initializeDB()
+    cursor.execute('''SELECT course_num , year , semester , grade
+                        FROM student_course
+                       WHERE student_id = (SELECT id 
+                        FROM login 
+                       WHERE username = ? )''',(username,))
+    return cursor.fetchall()
