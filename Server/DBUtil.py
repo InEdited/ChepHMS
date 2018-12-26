@@ -19,16 +19,17 @@ def getCourseTimes(courseNum):
                     FROM( schedule AS s INNER JOIN courseIns AS c ON s.course_ins = c.course_ins
                         )WHERE course_num=?
                     ''',(str(courseNum),))
-    return cursor.fetchall()
+    timez = cursor.fetchall()
+    items = [dict(zip([key[0] for key in cursor.description],row)) for row in timez]
+    return items
 
 def insertCourse(day,slot,hall,courseNum,instructor_name):
     cursor = initializeDB()
+    cursor.execute('''INSERT INTO courseIns (course_num,instructor_name) VALUES (?,?);''',(courseNum,instructor_name,))
     cursor.execute('''UPDATE schedule 
-                        SET course_ins = (
-                            SELECT course_ins from courseIns where course_num = ? AND instructor_name = ?
-                        ) 
-                        WHERE day = ? AND slot_num = ? AND hall_num = ?''',(courseNum,instructor_name,day,slot,hall))
-    cursor.fetchall()
+                        SET course_ins = (SELECT course_ins from courseIns where course_num = ? AND instructor_name = ?) 
+                        WHERE day = ? AND slot_num = ? AND hall_num = ? ''',(courseNum,instructor_name,day,slot,str(hall),))
+    cursor.connection.commit()
 
 def getLogin(username,enteredPassword):
     cursor = initializeDB()
@@ -48,4 +49,9 @@ def getCourseStuff(courseNum):
     cursor.execute('''SELECT course_name,course_description,instructor_name 
                         FROM(course_data as c INNER JOIN courseIns as ci on c.course_num = ci.course_num)
                             WHERE c.course_num = ?''',(str(courseNum),))
-    return cursor.fetchall()
+    dataz = cursor.fetchall()
+    items = [{cursor.description[0][0] : dataz[0][0] 
+            ,cursor.description[1][0] : dataz[0][1]
+            ,cursor.description[2][0] : [row[2] for row in dataz]}]
+    
+    return items

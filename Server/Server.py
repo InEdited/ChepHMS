@@ -29,8 +29,7 @@ def getCourseTime():
     if not request.get_json():
         return "{\"error\": \"Not found\"}" 
     course_num = request.get_json()['course_num']
-
-    return json.dumps(db.getCourseTimes(str(course_num))),201
+    return json.dumps( db.getCourseTimes(str(course_num))),201
 
 @app.route('/reserveSlot', methods=['POST'])
 def reserveSlot():
@@ -61,7 +60,10 @@ def getCourseData():
     if not request.get_json():
         return "{\"error\": \"Not found\"}" 
     course_num = request.get_json()['course_num']
-    return json.dumps(db.getCourseStuff(course_num)[0]),201
+    stuff = db.getCourseStuff(course_num)
+    print(stuff)
+    print()
+    return json.dumps(stuff),201
 
 if __name__ == '__main__':
     app.run(host= '0.0.0.0',port=5000)

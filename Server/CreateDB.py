@@ -32,8 +32,11 @@ cursor.execute('''CREATE TABLE courseIns (
     course_ins    INTEGER PRIMARY KEY 
                           AUTOINCREMENT,
     course_num    VARCHAR NOT NULL,
-    instructor_name VARCHAR
-
+    instructor_name VARCHAR,
+    UNIQUE (
+        course_num,
+        instructor_name
+    )
     )''')
 
 cursor.execute('''CREATE TABLE course_data (

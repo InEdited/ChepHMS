@@ -60,10 +60,11 @@ instructors = ['instructorA','instructorB','instructorC','instructorD','instruct
 username_passwords = {("InEdited","instructor") : hashDis('123456789'),("mo7sen","student"):hashDis('987654321') }
 
 for course,name in courses_dict.items():
+    ra = random.randint(2,8)
     c.execute('''INSERT INTO courseIns (course_num,instructor_name) VALUES (?,?)'''
-     ,(course,random.choice(instructors)))
+     ,(course,instructors[ra]))
     c.execute('''INSERT INTO courseIns (course_num,instructor_name) VALUES (?,?)'''
-     ,(course,random.choice(instructors)))
+     ,(course,instructors[ra-1]))
     c.execute('''INSERT INTO course_data VALUES (?,?,?)''',(course,name,lorem.paragraph()))
 
 for day in days:
