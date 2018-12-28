@@ -15,18 +15,93 @@ def getEmptyHalls(day,slot):
 
 def getCourseTimes(courseNum):
     cursor = initializeDB()
-    cursor.execute('''SELECT day , slot_num , hall_num , instructor_name
-                    FROM( schedule AS s INNER JOIN courseIns AS c ON s.course_ins = c.course_ins
-                        )WHERE course_num=?
+    cursor.execute('''SELECT day , slot_num , hall_num , id.name AS instructor_name
+                    FROM( 
+                        (schedule AS s 
+                            INNER JOIN courseIns AS c 
+                            ON s.course_ins = c.course_ins) 
+                                INNER JOIN instructor_data AS id 
+                                ON c.instructor_id = id.id )
+                            WHERE course_num=?
                     ''',(str(courseNum),))
-    return cursor.fetchall()
+    timez = cursor.fetchall()
+    #items = [dict(zip([key[0] for key in cursor.description],row)) for row in timez]
+    return timez
 
 def insertCourse(day,slot,hall,courseNum,instructor_name):
     cursor = initializeDB()
-    cursor.execute('''UPDATE schedule 
-                        SET course_ins = (
-                            SELECT course_ins from courseIns where course_num = ? AND instructor_name = ?
-                        ) 
-                        WHERE day = ? AND slot_num = ? AND hall_num = ?''',(courseNum,instructor_name,day,slot,hall))
-    cursor.fetchall()
+    cursor.execute('''INSERT 
+                        INTO courseIns (course_num,instructor_name) 
+                      VALUES (?,?);''',(courseNum,instructor_name,))
+    cursor.execute('''
+                      UPDATE schedule 
+                         SET course_ins = (SELECT course_ins 
+                        FROM courseIns 
+                       WHERE course_num = ? 
+                         AND instructor_name = ?) 
+                       WHERE day = ? 
+                         AND slot_num = ? 
+                         AND hall_num = ? ''',(courseNum,instructor_name,day,slot,str(hall),))
+    cursor.connection.commit()
 
+def getLogin(username,enteredPassword):
+    cursor = initializeDB()
+    cursor.execute('''SELECT password FROM login 
+                            WHERE username =? 
+                            ''',(str(username),))
+    hashedPasssword = cursor.fetchone()[0]
+    if(enteredPassword!=hashedPasssword):
+        return "fail"
+    cursor.execute('''SELECT id_type FROM login
+                            WHERE username=?
+                            ''',(str(username),))
+    return cursor.fetchall()
+
+def getCourseStuff(courseNum):
+    cursor = initializeDB()
+    cursor.execute('''SELECT course_name, course_description,  id.name as instructor_name
+                             FROM(
+                                 (course_data AS c 
+                                    INNER JOIN courseIns AS ci 
+                                         ON c.course_num = ci.course_num)
+                                    INNER JOIN instructor_data AS id 
+                                        ON ci.instructor_id = id.id) 
+                       WHERE c.course_num = ?''',(str(courseNum),))
+    dataz = cursor.fetchall()
+    items = [{cursor.description[0][0] : dataz[0][0] 
+            ,cursor.description[1][0] : dataz[0][1]
+            ,cursor.description[2][0] : [row[2] for row in dataz]}]
+    
+    return items
+
+def getTaughtCourses(username):
+    cursor = initializeDB()
+    cursor.execute('''SELECT course_num AS courseNum
+                        FROM courseIns 
+                       WHERE instructor_id = (SELECT id 
+                        FROM login 
+                       WHERE username = ? )''',(username,))
+    return cursor.fetchall()
+
+
+def getCourseStudents(courseNum):
+    cursor = initializeDB()
+    cursor.execute('''SELECT name                    AS student_name,
+                             student_id,
+                             grade
+                        FROM (student_course    AS sc 
+                                INNER JOIN student_data AS s 
+                                ON sc.student_id = s.id) 
+                       WHERE course_num=?''',(courseNum,) )
+    dataz =  cursor.fetchall()
+    items = [dict(zip([key[0] for key in cursor.description],row)) for row in dataz]
+    return items 
+
+def getCoursesRegistered(username):
+    cursor = initializeDB()
+    cursor.execute('''SELECT course_num , year , semester , grade
+                        FROM student_course
+                       WHERE student_id = (SELECT id 
+                        FROM login 
+                       WHERE username = ? )''',(username,))
+    return cursor.fetchall()

@@ -1,43 +1,52 @@
 package com.ziizii.hallmanagementsystem;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
-import com.ziizii.hallmanagementsystem.DataBaseManager.Hall;
-import com.ziizii.hallmanagementsystem.DataBaseManager.Slot;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class ResultsActivity extends AppCompatActivity {
-    private boolean admin;
-    ArrayList<Hall> viewSlots;
+public class EmptyHallsListActivity extends AppCompatActivity {
+    ArrayList<String> viewSlots;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        admin = getIntent().getBooleanExtra("admin",false);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_results);
-        //ArrayList<Slot> test = new ArrayList<>(Arrays.asList("931","901","914<33"));
-        viewSlots=  getIntent().getParcelableArrayListExtra("emptySlots");
+        viewSlots=  (ArrayList<String>) getIntent().getExtras().get("emptyhalls");
         final ListView resultsListView = findViewById(R.id.resultsListView);
-        ArrayAdapter<Hall> arrayAdapter = new ArrayAdapter<Hall>(
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
                 this,
                 android.R.layout.simple_list_item_1,
                 viewSlots
         );
         resultsListView.setAdapter(arrayAdapter);
-        if (admin) {
+     if(getIntent().getBooleanExtra("ins", false))
+     {
             resultsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                view.setBackgroundColor(0xFFFD99BB );
-                view.invalidate();
+                String hall = viewSlots.get(i);
+                String day = getIntent().getStringExtra("day");
+                int slot = getIntent().getIntExtra("slot", 1);
+
+                Intent intent = new Intent(EmptyHallsListActivity.this, ReserveSlotActivity.class);
+                intent.putExtra("hall", hall);
+                intent.putExtra("day", day);
+                intent.putExtra("slot", slot);
+                startActivity(intent);
+
                 }
             });
         }

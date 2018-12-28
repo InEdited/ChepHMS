@@ -5,39 +5,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.ziizii.hallmanagementsystem.MainActivity"
+    tools:context="com.ziizii.hallmanagementsystem.EmptyHallsActivity"
     tools:showIn="@layout/app_bar_main">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="10dp"
-        android:orientation="vertical">
+        android:layout_marginTop="40dp"
+        android:orientation="vertical"
+        android:paddingTop="60dp"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="10dp">
 
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:layout_weight="0"
-            android:orientation="horizontal"
-            android:paddingBottom="20dp">
-
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight=".1"
-                android:text="Search For: "
-                android:textSize="24sp" />
-
-            <Spinner
-                android:id="@+id/spinner"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight=".9"
-                tools:style="@android:style/Widget.Material.Light.Spinner" />
-
-        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/coursesUI"
