@@ -16,17 +16,7 @@
             android:label="@string/app_name"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity android:name=".EmptyHallsListActivity" />
-        <activity android:name=".LoginActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".MenuActivity"
-            android:label="@string/title_activity_menu"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity android:name=".LoginActivity"/>
         <activity android:name=".StudentMenuActivity" />
         <activity android:name=".InstructorMenuActivity" />
         <activity android:name=".CourseFieldActivity" />
@@ -36,7 +26,14 @@
         <activity android:name=".GpaViewActivity" />
         <activity android:name=".RegisteredCoursesActivity" />
         <activity android:name=".TaughtCoursesActivity" />
-        <activity android:name=".StudentListActivity"></activity>
+        <activity android:name=".StudentListActivity" />
+        <activity android:name=".IPActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

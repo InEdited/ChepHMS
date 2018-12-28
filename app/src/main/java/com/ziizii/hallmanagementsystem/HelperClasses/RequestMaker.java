@@ -28,7 +28,7 @@ import java.util.ArrayList;
 public class RequestMaker {
 
     private static String username = "";
-
+    public static boolean prototype = true;
     public static String hardcoded_ip = "http://192.168.1.10:5000/";
     public static void requestEmptyHalls(String day, int slot)
     {
