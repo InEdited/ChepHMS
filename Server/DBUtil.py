@@ -31,14 +31,14 @@ def getCourseTimes(courseNum):
 def insertCourse(day,slot,hall,courseNum,instructor_name):
     cursor = initializeDB()
     cursor.execute('''INSERT 
-                        INTO courseIns (course_num,instructor_name) 
+                        INTO courseIns (course_num,instructor_id) 
                       VALUES (?,?);''',(courseNum,instructor_name,))
     cursor.execute('''
                       UPDATE schedule 
                          SET course_ins = (SELECT course_ins 
                         FROM courseIns 
                        WHERE course_num = ? 
-                         AND instructor_name = ?) 
+                         AND instructor_id = ?) 
                        WHERE day = ? 
                          AND slot_num = ? 
                          AND hall_num = ? ''',(courseNum,instructor_name,day,slot,str(hall),))

@@ -29,7 +29,7 @@ public class RequestMaker {
 
     private static String username = "";
 
-    public static String hardcoded_ip = "http://192.168.1.103:5000/";
+    public static String hardcoded_ip = "http://192.168.1.10:5000/";
     public static void requestEmptyHalls(String day, int slot)
     {
         new AsyncTask<Day_Slot, Void, Void>() {
